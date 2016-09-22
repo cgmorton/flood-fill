@@ -1,2 +1,2 @@
 # flood-fill
-Python Floating Point Flood Fill Algorithm
+Python Flood Fill Algorithm
