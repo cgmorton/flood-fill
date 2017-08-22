@@ -14,7 +14,6 @@ This code was modified from this post/example:
 
 ## Dependencies
 NumPy  
-SciPy ndimage (optional)
 
 ## Tests
 
