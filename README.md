@@ -14,4 +14,22 @@ This code was modified from this post/example:
 
 ## Dependencies
 NumPy  
-SciPy ndimage
+SciPy ndimage (optional)
+
+## Tests
+
+The full test suite can be run using Pytest:
+
+```
+> python -m pytest
+```
+
+To get additional logging info, use the "-v" or "-s" tags:
+```
+py.test -v
+```
+
+To run tests for a single module:
+```
+python -m pytest tests\test_eedisalexi.py
+```
