@@ -26,10 +26,5 @@ The full test suite can be run using Pytest:
 
 To get additional logging info, use the "-v" or "-s" tags:
 ```
-py.test -v
-```
-
-To run tests for a single module:
-```
-python -m pytest tests\test_eedisalexi.py
+python -m pytest -v -s
 ```
