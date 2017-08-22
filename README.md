@@ -13,7 +13,11 @@ This code was modified from this post/example:
     http://arcgisandpython.blogspot.com/2012/01/python-flood-fill-algorithm.html
 
 ## Dependencies
-NumPy  
+* [NumPy](http://www.numpy.org/)  
+* [pytest](http://doc.pytest.org/en/latest/) - Only needed to run the test suite
+
+## Python 2
+The code is currently setup for Python 2.7, but it would be very easy to modify for Python 3X.  The only change that needs to be made is to convert the "xrange" calls to "range".  Python 3 could also be supported using the [future](http://python-future.org/) or [six](https://pythonhosted.org/six/) modules.
 
 ## Tests
 

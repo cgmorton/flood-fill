@@ -12,8 +12,10 @@ def fast_fill(input_array, four_way=False):
     input_array : ndarray
         Input array to be filled
     four_way : bool, optional
-        If True, search 4 immediately adjacent cells (cross structuring element)
-        If False, search all 8 adjacent cells (square structuring element).
+        If True, search 4 immediately adjacent cells
+            (cross structuring element)
+        If False, search all 8 adjacent cells
+            (square structuring element).
         The Default is False.
 
     Returns
@@ -105,8 +107,10 @@ def slow_fill(input_array, four_way=False):
     input_array : ndarray
         Input array to be filled
     four_way : bool, optional
-        If True, search 4 immediately adjacent cells (cross structuring element)
-        If False, search all 8 adjacent cells (square structuring element).
+        If True, search 4 immediately adjacent cells
+            (cross structuring element)
+        If False, search all 8 adjacent cells
+            (square structuring element).
         The Default is False.
 
     Returns
