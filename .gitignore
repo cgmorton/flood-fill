@@ -8,5 +8,7 @@ __pycache__/
 # Unit test / coverage reports
 .cache
 
+.ipynb_checkpoints
+
 *.bak
 *.DS_Store
