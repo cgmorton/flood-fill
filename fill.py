@@ -40,7 +40,8 @@ def fast_fill(input_array, four_way=False):
 
     # Set h_max to a value larger than the array maximum to ensure
     #   that the while loop will terminate
-    h_max = input_array.max() + 100
+    h_max = np.nanmax(input_array) + 100
+    print('  h_max: {}'.format(h_max))
 
     # Build mask of cells with data not on the edge of the image
     # Use 3x3 square structuring element
