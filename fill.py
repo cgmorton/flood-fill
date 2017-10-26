@@ -1,7 +1,6 @@
 import heapq
 
 import numpy as np
-from scipy import ndimage
 
 
 def fast_fill(input_array, four_way=False):
@@ -13,8 +12,10 @@ def fast_fill(input_array, four_way=False):
     input_array : ndarray
         Input array to be filled
     four_way : bool, optional
-        If True, search 4 immediately adjacent cells (cross structuring element)
-        If False, search all 8 adjacent cells (square structuring element).
+        If True, search 4 immediately adjacent cells
+            (cross structuring element)
+        If False, search all 8 adjacent cells
+            (square structuring element).
         The Default is False.
 
     Returns
@@ -39,15 +40,14 @@ def fast_fill(input_array, four_way=False):
 
     # Set h_max to a value larger than the array maximum to ensure
     #   that the while loop will terminate
-    h_max = np.max(input_array * 2.0)
+    h_max = np.nanmax(input_array) + 100
+    print('  h_max: {}'.format(h_max))
 
     # Build mask of cells with data not on the edge of the image
     # Use 3x3 square structuring element
     # Build Structuring element only using NumPy module
-    # Structuring element could also be built using SciPy ndimage module
-    #   el = ndimage.generate_binary_structure(2,2).astype(np.int)
     data_mask = np.isfinite(input_array)
-    inside_mask = ndimage.binary_erosion(
+    inside_mask = np_binary_erosion(
         data_mask,
         structure=np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]).astype(np.bool))
     edge_mask = (data_mask & ~inside_mask)
@@ -108,8 +108,10 @@ def slow_fill(input_array, four_way=False):
     input_array : ndarray
         Input array to be filled
     four_way : bool, optional
-        If True, search 4 immediately adjacent cells (cross structuring element)
-        If False, search all 8 adjacent cells (square structuring element).
+        If True, search 4 immediately adjacent cells
+            (cross structuring element)
+        If False, search all 8 adjacent cells
+            (square structuring element).
         The Default is False.
 
     Returns
@@ -120,10 +122,10 @@ def slow_fill(input_array, four_way=False):
     References
     ----------
     .. [3] Soile, P., Vogt, J., and Colombo, R., 2003. Carving and Adaptive
-       Drainage Enforcement of Grid Digital Elevation Models.
-       Water Resources Research, 39(12), 1366
+        Drainage Enforcement of Grid Digital Elevation Models.
+        Water Resources Research, 39(12), 1366
     .. [4] Soille, P., 1999. Morphological Image Analysis: Principles and
-       Applications, Springer-Verlag, pp. 173-174
+        Applications, Springer-Verlag, pp. 173-174
 
     """
     print('Slow Fill')
@@ -133,14 +135,11 @@ def slow_fill(input_array, four_way=False):
 
     # Set h_max to a value larger than the array maximum to ensure
     #   that the while loop will terminate
-    h_max = np.max(input_array * 2.0)
+    h_max = input_array.max() + 100
 
     # Build mask of cells with data not on the edge of the image
     # Use 3x3 square Structuring element
-    # Build Structuring element only using NumPy module
-    # Structuring element could also be built using SciPy ndimage module
-    #   el = ndimage.generate_binary_structure(2,2).astype(np.int)
-    inside_mask = ndimage.binary_erosion(
+    inside_mask = np_binary_erosion(
         np.isfinite(input_array),
         structure=np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]).astype(np.bool))
 
@@ -155,10 +154,8 @@ def slow_fill(input_array, four_way=False):
     # Cross structuring element
     if four_way:
         el = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]]).astype(np.bool)
-        # el = ndimage.generate_binary_structure(2, 1).astype(np.int)
     else:
         el = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]).astype(np.bool)
-        # el = ndimage.generate_binary_structure(2, 2).astype(np.int)
 
     # Iterate until marker array doesn't change
     while not np.array_equal(output_old_array, output_array):
