@@ -3,9 +3,9 @@ import heapq
 import numpy as np
 
 
-def fast_fill(input_array, four_way=False):
+def flood_fill(input_array, four_way=False):
     """
-    Fast flood fill depressions/sinks in floating point array
+    Flood fill depressions/sinks in floating point array from edges
 
     Parameters
     ----------
@@ -33,7 +33,7 @@ def fast_fill(input_array, four_way=False):
         Science Letters, 2(4) 214-219
 
     """
-    print('Fast Fill')
+    print('Flood Fill from Edges')
 
     # Rename or copy input so that input_array is a local variable?
     # input_array = np.copy(input_array)
@@ -99,14 +99,17 @@ def fast_fill(input_array, four_way=False):
     return output_array
 
 
-def slow_fill(input_array, four_way=False):
+def outflow_fill(input_array, outflow_pts, four_way=False):
     """
-    Slow flood fill depressions/sinks in floating point array
+    Flood fill depressions/sinks in floating point array from outflow points
+
 
     Parameters
     ----------
     input_array : ndarray
         Input array to be filled
+    outflow_pts : list
+        List of outflow array coordinates (row, col)
     four_way : bool, optional
         If True, search 4 immediately adjacent cells
             (cross structuring element)
@@ -121,48 +124,82 @@ def slow_fill(input_array, four_way=False):
 
     References
     ----------
-    .. [3] Soile, P., Vogt, J., and Colombo, R., 2003. Carving and Adaptive
-        Drainage Enforcement of Grid Digital Elevation Models.
-        Water Resources Research, 39(12), 1366
-    .. [4] Soille, P., 1999. Morphological Image Analysis: Principles and
-        Applications, Springer-Verlag, pp. 173-174
+    .. [1] Soille and Gratin, 1994. An Efficient Algorithm for Drainage
+        Networks Extraction on DEMs. Journal of Visual Communication and Image
+        Representation, 5(2), 181-189
+    .. [2] Liu et al., 2009. Another Fast and Simple DEM Depression-Filling
+        Algorithm Based on Priority Queue Structure. Atmopsheric and Oceanic
+        Science Letters, 2(4) 214-219
 
     """
-    print('Slow Fill')
+    print('Outflow Point Flood Fill')
 
     # Rename or copy input so that input_array is a local variable?
     # input_array = np.copy(input_array)
 
+    # Build mask of outflow point cells
+    # Should we check if outflow cells are active?
+    data_mask = np.isfinite(input_array)
+    outflow_mask = np.zeros(data_mask.shape, dtype=np.bool)
+    for out_row, out_col in outflow_pts:
+        outflow_mask[out_row, out_col] = 1
+
     # Set h_max to a value larger than the array maximum to ensure
     #   that the while loop will terminate
-    h_max = input_array.max() + 100
+    h_max = np.nanmax(input_array) + 10
+    print('  h_max: {}'.format(h_max))
 
-    # Build mask of cells with data not on the edge of the image
-    # Use 3x3 square Structuring element
-    inside_mask = np_binary_erosion(
-        np.isfinite(input_array),
-        structure=np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]).astype(np.bool))
-
-    # Initialize output array as max value test_array except edges
+    # Initialize output array
+    # Set masked/inactive cells to nan (these will be reset before returning)
+    # Set active/non-outflow cells to h_max (these values will be "eroded")
     output_array = np.copy(input_array)
-    output_array[inside_mask] = h_max
+    output_array[~data_mask] = np.nan
+    output_array[data_mask & (~outflow_mask)] = h_max
 
-    # Array for storing previous iteration
-    output_old_array = np.copy(input_array)
-    output_old_array[:] = 0
+    # Build priority queue and place outflow pixels into priority queue
+    # Last value is flag to indicate if cell is an outflow cell
+    put = heapq.heappush
+    get = heapq.heappop
+    fill_heap = [
+        (output_array[t_row, t_col], int(t_row), int(t_col), True)
+        for t_row, t_col in np.transpose(np.where(outflow_mask))]
+    heapq.heapify(fill_heap)
 
-    # Cross structuring element
-    if four_way:
-        el = np.array([[0, 1, 0], [1, 1, 1], [0, 1, 0]]).astype(np.bool)
-    else:
-        el = np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]).astype(np.bool)
+    def neighbors(row, col, four_way=False):
+        """Return indices of adjacent cells"""
+        if four_way:
+            return [
+                (row - 1, col), (row, col + 1),
+                (row + 1, col), (row, col - 1)]
+        else:
+            return [
+                (row - 1, col), (row - 1, col + 1),
+                (row, col + 1), (row + 1, col + 1),
+                (row + 1, col), (row + 1, col - 1),
+                (row, col - 1), (row - 1, col - 1)]
 
-    # Iterate until marker array doesn't change
-    while not np.array_equal(output_old_array, output_array):
-        output_old_array = np.copy(output_array)
-        output_array = np.maximum(
-            input_array,
-            ndimage.grey_erosion(output_array, size=(3, 3), footprint=el))
+    # Iterate until priority queue is empty
+    while True:
+        try:
+            h_crt, t_row, t_col, outflow_flag = get(fill_heap)
+        except IndexError:
+            break
+        for n_row, n_col in neighbors(t_row, t_col, four_way):
+            # Skip cell if an outflow cell
+            try:
+                if outflow_mask[n_row, n_col] or not data_mask[n_row, n_col]:
+                    continue
+            except IndexError:
+                continue
+
+            if output_array[n_row, n_col] == h_max:
+                output_array[n_row, n_col] = max(
+                    h_crt, input_array[n_row, n_col])
+                put(fill_heap, (output_array[n_row, n_col], n_row, n_col, False))
+
+    # Reset masked/nodata values to their original value
+    output_array[~data_mask] = input_array[~data_mask]
+
     return output_array
 
 
