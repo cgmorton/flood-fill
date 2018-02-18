@@ -8,7 +8,11 @@ __pycache__/
 # Unit test / coverage reports
 .cache
 
+# Jupyter Notebook
 .ipynb_checkpoints
+
+# PyCharm
+.idea
 
 *.bak
 *.DS_Store
