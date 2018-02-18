@@ -3,7 +3,7 @@ import heapq
 import numpy as np
 
 
-def flood_fill(input_array, four_way=False):
+def from_edges(input_array, four_way=False):
     """
     Flood fill depressions/sinks in floating point array from edges
 
@@ -100,7 +100,7 @@ def flood_fill(input_array, four_way=False):
     return output_array
 
 
-def outflow_fill(input_array, outflow_pts, four_way=False):
+def from_points(input_array, outflow_pts, four_way=False):
     """
     Flood fill depressions/sinks in floating point array from outflow points
 
@@ -133,7 +133,7 @@ def outflow_fill(input_array, outflow_pts, four_way=False):
         Science Letters, 2(4) 214-219
 
     """
-    print('Outflow Point Flood Fill')
+    print('Flood Fill from Outflow Points')
 
     # Rename or copy input so that input_array is a local variable?
     # input_array = np.copy(input_array)

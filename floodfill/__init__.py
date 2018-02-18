@@ -1,1 +1,2 @@
-__version__ = "0.1.0"
+from .floodfill import from_edges
+from .floodfill import from_points

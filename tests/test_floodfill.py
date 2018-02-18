@@ -1,7 +1,7 @@
 import numpy as np
 # import pytest
 
-import fill
+from floodfill import floodfill
 
 
 def test_np_binary_erosion_8way():
@@ -21,7 +21,7 @@ def test_np_binary_erosion_8way():
         [0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0]])
     np.testing.assert_array_equal(
-        fill.np_binary_erosion(data, structure), expected)
+        floodfill._np_binary_erosion(data, structure), expected)
 
 
 def test_np_binary_erosion_4way():
@@ -42,7 +42,7 @@ def test_np_binary_erosion_4way():
         [0, 0, 1, 0, 0, 0],
         [0, 0, 0, 0, 0, 0]])
     np.testing.assert_array_equal(
-        fill.np_binary_erosion(data, structure), expected)
+        floodfill._np_binary_erosion(data, structure), expected)
 
 
 def test_flood_fill_8way():
@@ -60,7 +60,7 @@ def test_flood_fill_8way():
         [1.0, 0.8, 1.0, 1.0, 1.0, 1.0],
         [1.0, 0.8, 1.0, 1.0, 1.0, 1.0]])
     np.testing.assert_array_equal(
-        fill.flood_fill(data, four_way=False), expected)
+        floodfill.from_edges(data, four_way=False), expected)
 
 
 def test_flood_fill_4way():
@@ -78,7 +78,7 @@ def test_flood_fill_4way():
         [1.0, 0.8, 1.0, 1.0, 1.0, 1.0],
         [1.0, 0.8, 1.0, 1.0, 1.0, 1.0]])
     np.testing.assert_array_equal(
-        fill.flood_fill(data, four_way=True), expected)
+        floodfill.from_edges(data, four_way=True), expected)
 
 
 def test_outflow_fill_8way():
@@ -98,7 +98,7 @@ def test_outflow_fill_8way():
         [1.0, 0.8, 0.4, 1.0, 1.0, 1.0],
         [1.0, 1.0, 0.4, 1.0, 1.0, 1.0]])
     outflow_pts = [[3, 4]]
-    np.testing.assert_array_equal(fill.outflow_fill(
+    np.testing.assert_array_equal(floodfill.from_points(
         data, outflow_pts, four_way=False), expected)
 
 
@@ -119,7 +119,7 @@ def test_outflow_fill_4way():
         [1.0, 0.8, 0.4, 1.0, 1.0, 1.0],
         [1.0, 1.0, 0.4, 1.0, 1.0, 1.0]])
     outflow_pts = [[3, 4]]
-    np.testing.assert_array_equal(fill.outflow_fill(
+    np.testing.assert_array_equal(floodfill.from_points(
         data, outflow_pts, four_way=True), expected)
 
 
@@ -152,7 +152,7 @@ def test_outflow_fill_8way_nodata():
     # Mask array must be a boolean type for this to work correctly
     data_mod = np.copy(data)
     data_mod[~mask] = np.nan
-    output = fill.outflow_fill(data, outflow_pts, four_way=False)
+    output = floodfill.from_points(data, outflow_pts, four_way=False)
     # Reset inactive cells to their original value after filling
     output[~mask] = data[~mask]
     print(output)
