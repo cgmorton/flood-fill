@@ -1,9 +1,9 @@
 # Flood Fill
 
-Pure Python floating point flood fill algorithm.  
+Python floating point flood fill tool.
 
 There are currently two flood fill algorithms implemented:  
-* flood_fill() - Loads all edge cells into a priority queue (returns lowest values first), starts at the minimum (edge) value, and iteratively searchs all connected neighbors and adds equal or "higher" neighbors to the queue and fills "lower" sink neighbors.
+* flood_fill() - Loads all edge cells into a priority queue (returns lowest values first), starts at the minimum (edge) value, and iteratively searches all connected neighbors and adds equal or "higher" neighbors to the queue and fills "lower" sink neighbors.
 * outflow_fill() - Loads all cell values at the user specified outflow points into a priority queue (returns lowest values first), starts at the minimum outflow point, and iteratively searchs all connected neighbors and adds equal or "higher" neighbors to the queue and fills "lower" sink neighbors.
 
 Both functions take a NumPy array as an input and return a filled NumPy array as output.  
@@ -16,9 +16,6 @@ This code was modified from this post/example:
 ## Dependencies
 * [NumPy](http://www.numpy.org/)  
 * [pytest](http://doc.pytest.org/en/latest/) - Only needed to run the test suite
-
-## Python 2
-The code is currently setup for Python 2.7, but it would be very easy to modify for Python 3X.  The only change that needs to be made is to convert the "xrange" calls to "range".  Python 3 could also be supported using the [future](http://python-future.org/) or [six](https://pythonhosted.org/six/) modules.
 
 ## Tests
 

@@ -47,7 +47,7 @@ def flood_fill(input_array, four_way=False):
     # Use 3x3 square structuring element
     # Build Structuring element only using NumPy module
     data_mask = np.isfinite(input_array)
-    inside_mask = np_binary_erosion(
+    inside_mask = _np_binary_erosion(
         data_mask,
         structure=np.array([[1, 1, 1], [1, 1, 1], [1, 1, 1]]).astype(np.bool))
     edge_mask = (data_mask & ~inside_mask)
@@ -96,6 +96,7 @@ def flood_fill(input_array, four_way=False):
                 output_array[n_row, n_col] = max(
                     h_crt, input_array[n_row, n_col])
                 put(fill_heap, (output_array[n_row, n_col], n_row, n_col, False))
+
     return output_array
 
 
@@ -203,8 +204,8 @@ def outflow_fill(input_array, outflow_pts, four_way=False):
     return output_array
 
 
-def np_binary_erosion(input_array,
-                      structure=np.ones((3, 3)).astype(np.bool)):
+def _np_binary_erosion(input_array,
+                       structure=np.ones((3, 3)).astype(np.bool)):
     """
     Multi-dimensional binary erosion with a given structuring element.
 
@@ -248,8 +249,8 @@ def np_binary_erosion(input_array,
     struc_mask = structure.astype(np.bool)
 
     # Iterate over each cell
-    for row in xrange(rows):
-        for col in xrange(cols):
+    for row in range(rows):
+        for col in range(cols):
             # The value of the output pixel is the minimum value of all the
             #   pixels in the input pixel's neighborhood.
             binary_erosion[row+1, col+1] = np.min(
