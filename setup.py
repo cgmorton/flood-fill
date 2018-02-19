@@ -28,7 +28,7 @@ version = find_version("floodfill", "__init__.py")
 setup(
     name='floodfill',
     version=version,
-    description='Python Floating Point Flood Fill Tool',
+    description='Python/NumPy Floating Point Flood Fill Tool',
     license='Apache',
     author='Charles Morton',
     author_email='charles.g.morton@gmail.com',

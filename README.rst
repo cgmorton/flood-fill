@@ -7,10 +7,12 @@
 Flood Fill
 ==========
 
-Python floating point flood fill tool.
+Python/NumPy floating point flood fill tool.
 
-There are currently two flood fill algorithms implemented:  
+There are currently two flood fill algorithms implemented:
+
 * from_edges() - Loads all edge cells into a priority queue (returns lowest values first), starts at the minimum (edge) value, and iteratively searches all connected neighbors and adds equal or "higher" neighbors to the queue and fills "lower" sink neighbors.
+
 * from_points() - Loads all cell values at the user specified outflow points into a priority queue (returns lowest values first), starts at the minimum outflow point, and iteratively searchs all connected neighbors and adds equal or "higher" neighbors to the queue and fills "lower" sink neighbors.
 
 Both functions take a NumPy array as an input and return a filled NumPy array as output.  
@@ -33,6 +35,7 @@ To install the floodfill python module:
 Dependencies
 ------------
 `NumPy <http://www.numpy.org>`__
+
 `pytest <http://doc.pytest.org/en/latest/>`__ - Only needed to run the test suit
 
 Tests
